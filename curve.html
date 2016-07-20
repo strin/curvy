@@ -305,7 +305,7 @@ function data_csv() {
 	var xFunc = Parser.parse(xFuncText).toJSFunction( ['t'] );
 	var yFunc = Parser.parse(yFuncText).toJSFunction( ['t'] );
 	var zFunc = Parser.parse(zFuncText).toJSFunction( ['t'] );
-	var csv = '"x","y","z"\r\n'
+	var csv = 't,x,y,z\r\n'
 	for(var t = tMin; t <= tMax; t += Math.pow(10, timeres)) {
 		csv += t;
 		csv += ',' + xFunc(t);
