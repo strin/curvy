@@ -67,9 +67,11 @@ var tMin = -2.12, tMax = 1.12, tRange = tMax - tMin;
 var xFuncText = "t^2 - 3*t";
 var yFuncText = "t^2 - 4*t^2";
 var zFuncText = "(t^5 - 10*t)/5";
+var yawFuncText = "t / 10 * 3.1415926";
 var xFunc = Parser.parse(xFuncText).toJSFunction( ['t'] );
 var yFunc = Parser.parse(yFuncText).toJSFunction( ['t'] );
 var zFunc = Parser.parse(zFuncText).toJSFunction( ['t'] );
+var yawFunc = Parser.parse(yawFuncText).toJSFunction( ['t']);
 
 var xMin = xMax = yMin = yMax = zMin = zMax = 0; // for autosizing window
 	
@@ -159,12 +161,14 @@ function init()
 	};
 
 	// GUI -- equation
-	gui_xText = gui.add( this, 'xFuncText' ).name('x = f(t) = ');
+	gui_xText = gui.add( this, 'xFuncText' ).name('x(t) = ');
 	gui_xText.onChange( function(value) { if (autoUpdate) createGraph(); } );
-	gui_yText = gui.add( this, 'yFuncText' ).name('y = g(t) = ');
+	gui_yText = gui.add( this, 'yFuncText' ).name('y(t) = ');
 	gui_yText.onChange( function(value) { if (autoUpdate) createGraph(); } );
-	gui_zText = gui.add( this, 'zFuncText' ).name('z = h(t) = ');
+	gui_zText = gui.add( this, 'zFuncText' ).name('z(t) = ');
 	gui_zText.onChange( function(value) { if (autoUpdate) createGraph(); } );
+	gui_yawText = gui.add( this, 'yawFuncText' ).name('yaw(t) = ');
+	gui_yawText.onChange( function(value) { if (autoUpdate) createGraph(); } );
 	gui_tMin = gui.add( this, 'tMin' ).name('t Minimum = ');
 	gui_tMin.onChange( function(value) { 
 		if (autoUpdate) {
@@ -305,12 +309,14 @@ function data_csv() {
 	var xFunc = Parser.parse(xFuncText).toJSFunction( ['t'] );
 	var yFunc = Parser.parse(yFuncText).toJSFunction( ['t'] );
 	var zFunc = Parser.parse(zFuncText).toJSFunction( ['t'] );
-	var csv = 't,x,y,z\r\n'
+	var yawFunc = Parser.parse(yawFuncText).toJSFunction( ['t'] );
+	var csv = 't,x,y,z,yaw\r\n'
 	for(var t = tMin; t <= tMax; t += Math.pow(10, timeres)) {
 		csv += t;
 		csv += ',' + xFunc(t);
 		csv += ',' + yFunc(t);
 		csv += ',' + zFunc(t);
+		csv += ',' + yawFunc(t);
 		csv += '\r\n';
 	}
 	return csv;
