@@ -27,6 +27,11 @@
 <link rel=stylesheet href="css/info.css"/>
 <link rel=stylesheet href="css/lightbox.css"/>
 
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 <!---------------------------------------------------------------->
 
 <div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
@@ -56,7 +61,7 @@ var myKnot;
 var tubeMeshWire, tubeMeshSolid;
 
 // extrusion segments -- how many sample points to take along curve.
-var timeres = -1;
+var timeres = -2;
 var playSpeed = 2; // 1X play.
 
 // how many sides the tube cross-section has
@@ -155,8 +160,6 @@ function init()
 	{
 		trajectory: function() { toggleTrajectoryLibrary(); },
 		resetCam:  function() { resetCamera(); },	
-		preset1:   function() { preset01(); },
-		graphFunc: function() { createGraph(); },
 		play: function() { playGraph(); },
 		export: function() { exportCSV(); },
 		finalValue: 337
@@ -187,7 +190,7 @@ function init()
 			createGraph(); 
 		}
 	} );
-	gui_segments = gui.add( this, 'timeres' ).name('log-time-delta').min(-10).max(-1).step(1);
+	gui_segments = gui.add( this, 'timeres' ).name('log-time-delta').min(-10).max(-2).step(1);
 	gui_segments.onChange(
 		function(value) {
 			if(autoUpdate) {
@@ -201,13 +204,9 @@ function init()
 	// GUI -- parameters
 	autoUpdate = true;
 	
-	// GUI -- preset equations
-	var gui_preset = gui.addFolder('Preset equations');
-	gui_preset.add( parameters, 'preset1' ).name('Trefoil');
 
 	gui.add( parameters, 'trajectory' ).name("Trajectory Lib");
 	gui.add( parameters, 'resetCam' ).name("Reset Camera");
-	gui.add( parameters, 'graphFunc' ).name("Graph Function");	
 	gui.add( parameters, 'play').name("Play");
 	gui.add( parameters, 'export').name("Export to CSV");
 
@@ -406,19 +405,56 @@ function render()
         <ul class="tab">
           <li><a href="#" class="tablinks" onclick="toggleTrajectoryLibrary();"><b>&times;</b></a></li>
           <li><a href="#" class="tablinks active" onclick="openTab(event, 'Spiral')">Spiral</a></li>
-          <li><a href="#" class="tablinks" onclick="openTab(event, 'WordCloud')">WordCloud</a></li>
+          <li><a href="#" class="tablinks" onclick="openTab(event, 'Cube')">Cube</a></li>
         </ul>
 
         <div id="Spiral" class="tabcontent">
-          <h2>Spiral</h2>
-          <div id="visual">
-          </div>
+            <h4>A spiral trajectory</h4>
+            <img src="images/spiral-example.png" style="width: 100%;"></img>
+            <div>
+            	<script>
+            	function generate_spiral() {
+            		var radius = parseFloat($('#curve-spiral-radius').val());
+            		var circle_secs = parseFloat($('#curve-spiral-seconds-circle').val());
+            		var ascend_speed = parseFloat($('#curve-spiral-ascending-speed').val());
+            		var num_circles = parseFloat($('#curve-spiral-num-circles').val());
+            		xFuncText = radius + ' * cos(t / ' + circle_secs + ' * 2 * 3.1415926)';
+            		yFuncText = radius + ' * sin(t / ' + circle_secs + ' * 2 * 3.1415926)';
+            		zFuncText = 't / ' + (1./ascend_speed);
+            		yawFuncText = '- t / ' + circle_secs + ' * 2 * 3.1415926'; 
+            		gui_xText.setValue(xFuncText);
+            		gui_yText.setValue(yFuncText);
+            		gui_zText.setValue(zFuncText);
+            		gui_yawText.setValue(yawFuncText);
+            		gui_tMin.setValue(0);
+            		gui_tMax.setValue(circle_secs * num_circles);
+            		toggleTrajectoryLibrary();
+            	}
+            	</script>
+	            <div style="text-align: left;">
+				  <div class="form-group">
+				    <label for="curve-spiral-radius">Radius (meters)</label>
+				    <input type="text" class="form-control" id="curve-spiral-radius" placeholder="5">
+				  </div>
+				  <div class="form-group">
+				    <label for="curve-spiral-seconds-circle">Seconds per circle</label>
+				    <input type="text" class="form-control" id="curve-spiral-seconds-circle" placeholder="10">
+				  </div>
+				  <div class="form-group">
+				    <label for="curve-spiral-ascending-speed">Ascending speed (m/s)</label>
+				    <input type="text" class="form-control" id="curve-spiral-ascending-speed" placeholder="0.3">
+				  </div>
+				  <div class="form-group">
+				    <label for="curve-spiral-num-circles">Number of circles</label>
+				    <input type="text" class="form-control" id="curve-spiral-num-circles" placeholder="4">
+				  </div>
+				  <button class="btn btn-default" onclick="generate_spiral();">Generate</button>
+			    </div>
+		    </div>
         </div>
 
-        <div id="WordCloud" class="tabcontent">
-          <h2>Word Cloud</h2>
-          <div id="wordcloud"></div>
-          <script src="/js/wordcloud.js"></script>    
+        <div id="Cube" class="tabcontent">
+          <h2>Cube</h2>
         </div>
 
         <script>
