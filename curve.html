@@ -25,6 +25,7 @@
 <script src="js/jquery-ui.js"></script>
 <link rel=stylesheet href="css/jquery-ui.css" />
 <link rel=stylesheet href="css/info.css"/>
+<link rel=stylesheet href="css/lightbox.css"/>
 
 <!-- ------------------------------------------------------------ -->
 
@@ -386,5 +387,50 @@ function render()
 
 </script>
 
+
+ <div class="visual">
+      <div class="visual-container">
+        <ul class="tab">
+          <li><a href="#" class="tablinks active" onclick="openTab(event, 'Proactivity')">Proactivity</a></li>
+          <li><a href="#" class="tablinks" onclick="openTab(event, 'WordCloud')">WordCloud</a></li>
+        </ul>
+
+        <div id="Proactivity" class="tabcontent">
+          <h2>Proactivity</h2>
+          <div id="visual">
+          </div>
+        </div>
+
+        <div id="WordCloud" class="tabcontent">
+          <h2>Word Cloud</h2>
+          <div id="wordcloud"></div>
+          <script src="/js/wordcloud.js"></script>    
+        </div>
+
+        <script>
+        function openTab(evt, name) {
+          // Declare all variables
+          var i, tabcontent, tablinks;
+          // Get all elements with class="tabcontent" and hide them
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+              tabcontent[i].style.display = "none";
+          }
+          // Get all elements with class="tablinks" and remove the class "active"
+          tablinks = document.getElementsByClassName("tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+              tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+          // Show the current tab, and add an "active" class to the link that opened the tab
+          document.getElementById(name).style.display = "block";
+          if(evt) {
+            evt.currentTarget.className += " active";
+          }
+        }
+        openTab(null, 'Proactivity');
+        </script>
+        
+      </div>
+  </div>
 </body>
 </html>
