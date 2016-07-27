@@ -27,7 +27,7 @@
 <link rel=stylesheet href="css/info.css"/>
 <link rel=stylesheet href="css/lightbox.css"/>
 
-<!-- ------------------------------------------------------------ -->
+<!---------------------------------------------------------------->
 
 <div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
 <script>
@@ -153,6 +153,7 @@ function init()
 	
 	parameters = 
 	{
+		trajectory: function() { toggleTrajectoryLibrary(); },
 		resetCam:  function() { resetCamera(); },	
 		preset1:   function() { preset01(); },
 		graphFunc: function() { createGraph(); },
@@ -204,12 +205,24 @@ function init()
 	var gui_preset = gui.addFolder('Preset equations');
 	gui_preset.add( parameters, 'preset1' ).name('Trefoil');
 
+	gui.add( parameters, 'trajectory' ).name("Trajectory Lib");
 	gui.add( parameters, 'resetCam' ).name("Reset Camera");
 	gui.add( parameters, 'graphFunc' ).name("Graph Function");	
 	gui.add( parameters, 'play').name("Play");
 	gui.add( parameters, 'export').name("Export to CSV");
 
 	preset01();
+}
+
+function toggleTrajectoryLibrary() {
+	var container = $('.visual-container');
+	console.log(container.css('display'));
+	if(container.css('display') != 'none') {
+		container.css('display', 'none');
+	}else{
+		container.css('display', 'block');
+	}
+	
 }
 
 function createGraph()
@@ -388,15 +401,16 @@ function render()
 </script>
 
 
- <div class="visual">
-      <div class="visual-container">
+ <div class="visual-container">
+      <div class="visual">
         <ul class="tab">
-          <li><a href="#" class="tablinks active" onclick="openTab(event, 'Proactivity')">Proactivity</a></li>
+          <li><a href="#" class="tablinks" onclick="toggleTrajectoryLibrary();"><b>&times;</b></a></li>
+          <li><a href="#" class="tablinks active" onclick="openTab(event, 'Spiral')">Spiral</a></li>
           <li><a href="#" class="tablinks" onclick="openTab(event, 'WordCloud')">WordCloud</a></li>
         </ul>
 
-        <div id="Proactivity" class="tabcontent">
-          <h2>Proactivity</h2>
+        <div id="Spiral" class="tabcontent">
+          <h2>Spiral</h2>
           <div id="visual">
           </div>
         </div>
@@ -427,7 +441,7 @@ function render()
             evt.currentTarget.className += " active";
           }
         }
-        openTab(null, 'Proactivity');
+        openTab(null, 'Spiral');
         </script>
         
       </div>
